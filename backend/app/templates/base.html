@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
+    {% if not hide_topbar %}
     <nav class="bg-white shadow-lg">
         <div class="container mx-auto px-4">
             <div class="flex justify-between">
@@ -25,6 +26,7 @@
             </div>
         </div>
     </nav>
+    {% endif %}
 
     <main class="container mx-auto px-4 py-8">
         {% block content %}{% endblock %}

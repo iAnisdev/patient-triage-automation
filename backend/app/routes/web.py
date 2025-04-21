@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException, Depends
+from fastapi import APIRouter, Request, HTTPException, Depends, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from app.utils.auth import create_session_token, is_authenticated, get_current_user
@@ -6,6 +6,7 @@ from app.models.queue import QueueItem
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -15,6 +16,7 @@ QUEUE_FILE = Path("app/data/queue.json")
 APPOINTMENTS_FILE = Path("app/data/appointments.json")
 PATIENTS_FILE = Path("app/data/patients.json")
 DOCTORS_FILE = Path("app/data/doctors.json")
+BOOKING_FILE = "app/data/bookings.json"
 
 def load_queue_data():
     if not QUEUE_FILE.exists():
@@ -32,6 +34,19 @@ def load_json_data(file_path: str):
         return []
     with open(path, "r") as f:
         return json.load(f)
+
+def load_bookings():
+    try:
+        with open(BOOKING_FILE, "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+
+def save_booking(booking_data):
+    bookings = load_bookings()
+    bookings.append(booking_data)
+    with open(BOOKING_FILE, "w") as f:
+        json.dump(bookings, f, indent=2)
 
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -158,4 +173,40 @@ async def appointments_list(request: Request):
             "doctors": doctors,
             "symptoms": unique_symptoms
         }
-    ) 
+    )
+
+@router.get("/booking")
+async def booking_form(request: Request):
+    return templates.TemplateResponse("booking.html", {
+        "request": request,
+        "hide_topbar": True
+    })
+
+@router.post("/booking")
+async def submit_booking(
+    request: Request,
+    name: str = Form(...),
+    age: int = Form(...),
+    symptoms: str = Form(...)
+):
+    # Process symptoms - split by comma and clean up
+    symptoms_list = [s.strip() for s in symptoms.split(',') if s.strip()]
+    
+    booking_data = {
+        "id": str(len(load_bookings()) + 1),
+        "name": name,
+        "age": age,
+        "symptoms": symptoms_list,  # Store as list
+        "timestamp": datetime.now().isoformat(),
+        "status": "pending"
+    }
+    
+    save_booking(booking_data)
+    return RedirectResponse(url="/thanks", status_code=303)
+
+@router.get("/thanks")
+async def thank_you(request: Request):
+    return templates.TemplateResponse("thanks.html", {
+        "request": request,
+        "hide_topbar": True
+    }) 

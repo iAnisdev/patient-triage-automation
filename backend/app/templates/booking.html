@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Triage Form{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-extrabold text-gray-900">Patient Triage Form</h2>
+            <p class="mt-2 text-sm text-gray-600">Please provide your information for initial assessment</p>
+        </div>
+
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <form action="/booking" method="POST" enctype="application/x-www-form-urlencoded" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <div class="mt-1">
+                        <input id="name" name="name" type="text" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="age" class="block text-sm font-medium text-gray-700">Age</label>
+                    <div class="mt-1">
+                        <input id="age" name="age" type="number" min="0" max="120" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="symptoms" class="block text-sm font-medium text-gray-700">Symptoms</label>
+                    <p class="mt-1 text-sm text-gray-500">Please separate each symptom with a comma (e.g. headache, fever, cough)</p>
+                    <div class="mt-1">
+                        <textarea id="symptoms" name="symptoms" rows="4" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="headache, fever, cough"></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Submit Triage
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 
