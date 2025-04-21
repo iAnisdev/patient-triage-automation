@@ -1,12 +1,15 @@
 from fastapi import APIRouter
 from pathlib import Path
 import json
+from datetime import datetime
 
 router = APIRouter()
 
 # File paths
 QUEUE_FILE = Path("app/data/queue.json")
 APPOINTMENTS_FILE = Path("app/data/appointments.json")
+DOCTORS_FILE = Path("app/data/doctors.json")
+PATIENTS_FILE = Path("app/data/patients.json")
 
 def load_json_data(file_path: Path):
     if not file_path.exists():
@@ -26,11 +29,29 @@ async def get_stats():
     completed_appointments = len([apt for apt in appointments if apt["status"] == "completed"])
     scheduled_appointments = len([apt for apt in appointments if apt["status"] == "scheduled"])
     
+    # Get today's date in YYYY-MM-DD format
+    today = datetime.now().strftime("%Y-%m-%d")
+    today_appointments = len([apt for apt in appointments if apt["date"] == today])
+    
+    # Get appointments scheduled for today (created today)
+    today_created = datetime.now().strftime("%Y-%m-%d")
+    scheduled_today = len([apt for apt in appointments 
+                          if apt["created_at"].startswith(today_created) 
+                          and apt["status"] == "scheduled"])
+    
+    # Load doctors and patients data
+    doctors = load_json_data(DOCTORS_FILE)
+    patients = load_json_data(PATIENTS_FILE)
+    
     return {
         "urgent_pending": urgent_pending,
         "total_appointments": total_appointments,
         "completed_appointments": completed_appointments,
-        "scheduled_appointments": scheduled_appointments
+        "scheduled_appointments": scheduled_appointments,
+        "today_appointments": today_appointments,
+        "scheduled_today": scheduled_today,
+        "total_doctors": len(doctors),
+        "total_patients": len(patients)
     }
 
 # API routes will be added here 

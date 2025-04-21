@@ -16,6 +16,26 @@
             <p class="text-2xl font-semibold text-red-600" id="urgent-pending">Loading...</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-sm font-medium text-gray-500">New Appointments</h3>
+            <p class="text-2xl font-semibold text-yellow-600" id="today-appointments">Loading...</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-sm font-medium text-gray-500">Scheduled Today</h3>
+            <p class="text-2xl font-semibold text-indigo-600" id="scheduled-today">Loading...</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-sm font-medium text-gray-500">Total Patients</h3>
+            <p class="text-2xl font-semibold text-purple-600" id="total-patients">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Additional Stats Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-sm font-medium text-gray-500">Total Doctors</h3>
+            <p class="text-2xl font-semibold text-purple-600" id="total-doctors">Loading...</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md">
             <h3 class="text-sm font-medium text-gray-500">Total Appointments</h3>
             <p class="text-2xl font-semibold text-gray-800" id="total-appointments">Loading...</p>
         </div>
@@ -54,13 +74,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             
             document.getElementById('urgent-pending').textContent = data.urgent_pending;
+            document.getElementById('today-appointments').textContent = data.today_appointments;
+            document.getElementById('scheduled-today').textContent = data.scheduled_today;
+            document.getElementById('total-patients').textContent = data.total_patients;
+            document.getElementById('total-doctors').textContent = data.total_doctors;
             document.getElementById('total-appointments').textContent = data.total_appointments;
             document.getElementById('completed-appointments').textContent = data.completed_appointments;
             document.getElementById('scheduled-appointments').textContent = data.scheduled_appointments;
         } catch (error) {
             console.error('Error fetching stats:', error);
             // Update all stats to show error
-            document.querySelectorAll('[id$="-appointments"], #urgent-pending').forEach(el => {
+            document.querySelectorAll('[id$="-appointments"], #urgent-pending, #scheduled-today, #total-patients, #total-doctors').forEach(el => {
                 el.textContent = 'Error';
             });
         }
