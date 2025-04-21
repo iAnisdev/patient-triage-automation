@@ -1,10 +1,1 @@
-{
-    "id": "UC-001",
-    "patient_id": 7,
-    "symptoms": ["chest pain", "fatigue"],
-    "reason": "Flagged as urgent",
-    "submitted_at": "2025-04-21T13:05",
-    "processed_at": "",
-    "processed": false
-  }
-  
+[{"id": "1", "patient_name": "John Doe", "age": 45, "symptoms": ["Chest pain", "Shortness of breath"], "timestamp": "2024-04-21T10:30:00", "status": "approved", "process_time": "2025-04-21T21:04:17.339873"}, {"id": "2", "patient_name": "Jane Smith", "age": 32, "symptoms": ["Severe headache", "Nausea"], "timestamp": "2024-04-21T11:15:00", "status": "rejected", "process_time": "2025-04-21T21:04:19.251514"}, {"id": "3", "patient_name": "Robert Johnson", "age": 58, "symptoms": ["Fever", "Cough", "Fatigue"], "timestamp": "2024-04-21T11:45:00", "status": "approved", "process_time": "2025-04-21T21:04:20.637792"}]
