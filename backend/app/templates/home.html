@@ -9,6 +9,27 @@
         <p class="text-xl text-gray-600">Monitor and manage patient triage results and urgent appointments</p>
     </div>
 
+    <!-- Stats Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-sm font-medium text-gray-500">Urgent Cases Pending</h3>
+            <p class="text-2xl font-semibold text-red-600" id="urgent-pending">Loading...</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-sm font-medium text-gray-500">Total Appointments</h3>
+            <p class="text-2xl font-semibold text-gray-800" id="total-appointments">Loading...</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-sm font-medium text-gray-500">Completed Appointments</h3>
+            <p class="text-2xl font-semibold text-green-600" id="completed-appointments">Loading...</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-sm font-medium text-gray-500">Scheduled Appointments</h3>
+            <p class="text-2xl font-semibold text-blue-600" id="scheduled-appointments">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Action Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Review Urgent Cases</h2>
@@ -23,4 +44,33 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to update stats
+    async function updateStats() {
+        try {
+            const response = await fetch('/api/stats');
+            const data = await response.json();
+            
+            document.getElementById('urgent-pending').textContent = data.urgent_pending;
+            document.getElementById('total-appointments').textContent = data.total_appointments;
+            document.getElementById('completed-appointments').textContent = data.completed_appointments;
+            document.getElementById('scheduled-appointments').textContent = data.scheduled_appointments;
+        } catch (error) {
+            console.error('Error fetching stats:', error);
+            // Update all stats to show error
+            document.querySelectorAll('[id$="-appointments"], #urgent-pending').forEach(el => {
+                el.textContent = 'Error';
+            });
+        }
+    }
+
+    // Load stats immediately
+    updateStats();
+    
+    // Update stats every 30 seconds
+    setInterval(updateStats, 30000);
+});
+</script>
 {% endblock %}

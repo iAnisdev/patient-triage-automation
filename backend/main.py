@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from app.routes import web, health, triage
+from app.routes import web, health, triage, api
 import os
 
 app = FastAPI()
@@ -23,6 +23,7 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # Include routers
+app.include_router(api.router, prefix="/api")
 app.include_router(web.router)
 app.include_router(health.router, prefix="/health")
 app.include_router(triage.router, prefix="/triage")
