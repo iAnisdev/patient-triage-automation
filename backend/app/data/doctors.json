@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1",
+    "name": "Dr. Sarah Johnson",
+    "specialization": "Cardiology",
+    "email": "sarah.johnson@hospital.com"
+  },
+  {
+    "id": "2",
+    "name": "Dr. Michael Chen",
+    "specialization": "Neurology",
+    "email": "michael.chen@hospital.com"
+  }
+] 

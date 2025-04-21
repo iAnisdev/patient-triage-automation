@@ -23,6 +23,13 @@ def save_queue_data(data):
     with open(QUEUE_FILE, "w") as f:
         json.dump(data, f, default=str)
 
+def load_json_data(file_path: str):
+    path = Path(file_path)
+    if not path.exists():
+        return []
+    with open(path, "r") as f:
+        return json.load(f)
+
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     if not is_authenticated(request):
@@ -112,4 +119,34 @@ async def handle_urgent_action(item_id: str, action: str):
 async def appointments_list(request: Request):
     if not is_authenticated(request):
         return RedirectResponse(url="/login")
-    return templates.TemplateResponse("appointments.html", {"request": request}) 
+    
+    # Load all data
+    appointments = load_json_data("app/data/appointments.json")
+    patients = load_json_data("app/data/patients.json")
+    doctors = load_json_data("app/data/doctors.json")
+    
+    # Create lookup dictionaries
+    patients_dict = {str(p["id"]): p for p in patients}  # Convert IDs to strings for matching
+    doctors_dict = {str(d["id"]): d for d in doctors}    # Convert IDs to strings for matching
+    
+    # Combine the data
+    combined_appointments = []
+    for appointment in appointments:
+        patient = patients_dict.get(appointment["patient_id"])
+        doctor = doctors_dict.get(appointment["doctor_id"])
+        
+        if patient and doctor:
+            combined_appointments.append({
+                "id": appointment["id"],
+                "patient_name": patient["name"],
+                "doctor_name": doctor["name"],
+                "date": appointment["date"],
+                "time": appointment["time"],
+                "status": appointment["status"],
+                "symptoms": appointment["symptoms"]
+            })
+    
+    return templates.TemplateResponse(
+        "appointments.html", 
+        {"request": request, "appointments": combined_appointments}
+    ) 
