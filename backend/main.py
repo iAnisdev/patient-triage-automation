@@ -1,7 +1,7 @@
 from fastapi import FastAPI
+from app.routes import triage, health
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"message": "Patient Triage API is running"}
+app.include_router(health.router, prefix="/health")
+app.include_router(triage.router, prefix="/triage")
