@@ -1,0 +1,219 @@
+[
+  {
+    "id": 1,
+    "name": "Patient 1",
+    "age": 22,
+    "symptoms": [
+      "chest pain",
+      "headache"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Patient 2",
+    "age": 35,
+    "symptoms": [
+      "dizziness"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Patient 3",
+    "age": 23,
+    "symptoms": [
+      "fever"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Patient 4",
+    "age": 48,
+    "symptoms": [
+      "fatigue"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Patient 5",
+    "age": 32,
+    "symptoms": [
+      "cough",
+      "dizziness"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Patient 6",
+    "age": 49,
+    "symptoms": [
+      "dizziness",
+      "fatigue"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Patient 7",
+    "age": 84,
+    "symptoms": [
+      "headache",
+      "chest pain"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Patient 8",
+    "age": 70,
+    "symptoms": [
+      "headache"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Patient 9",
+    "age": 64,
+    "symptoms": [
+      "chest pain"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Patient 10",
+    "age": 56,
+    "symptoms": [
+      "cough",
+      "dizziness",
+      "chest pain"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Patient 11",
+    "age": 62,
+    "symptoms": [
+      "headache",
+      "dizziness",
+      "chest pain"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Patient 12",
+    "age": 79,
+    "symptoms": [
+      "chest pain",
+      "headache"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Patient 13",
+    "age": 69,
+    "symptoms": [
+      "chest pain",
+      "headache"
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Patient 14",
+    "age": 31,
+    "symptoms": [
+      "headache"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Patient 15",
+    "age": 29,
+    "symptoms": [
+      "fever",
+      "headache",
+      "fatigue"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "Patient 16",
+    "age": 53,
+    "symptoms": [
+      "shortness of breath",
+      "cough",
+      "chest pain"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "Patient 17",
+    "age": 31,
+    "symptoms": [
+      "shortness of breath"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Patient 18",
+    "age": 40,
+    "symptoms": [
+      "dizziness"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Patient 19",
+    "age": 62,
+    "symptoms": [
+      "headache"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Patient 20",
+    "age": 28,
+    "symptoms": [
+      "fatigue",
+      "shortness of breath"
+    ]
+  },
+  {
+    "id": 21,
+    "name": "Patient 21",
+    "age": 19,
+    "symptoms": [
+      "cough"
+    ]
+  },
+  {
+    "id": 22,
+    "name": "Patient 22",
+    "age": 31,
+    "symptoms": [
+      "headache"
+    ]
+  },
+  {
+    "id": 23,
+    "name": "Patient 23",
+    "age": 71,
+    "symptoms": [
+      "headache"
+    ]
+  },
+  {
+    "id": 24,
+    "name": "Patient 24",
+    "age": 64,
+    "symptoms": [
+      "chest pain"
+    ]
+  },
+  {
+    "id": 25,
+    "name": "Patient 25",
+    "age": 58,
+    "symptoms": [
+      "headache",
+      "dizziness",
+      "fatigue"
+    ]
+  }
+]
