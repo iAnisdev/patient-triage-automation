@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Activity x:Class="NotifyPatient" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="AppointmentId" Type="InArgument(x:String)" />
+    <x:Property Name="NotificationType" Type="InArgument(x:String)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>800,800</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>NotifyPatient_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <scg:List x:TypeArguments="x:String" Capacity="28">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+    </scg:List>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="28">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>UiPath.OCR</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>Microsoft.Bcl.AsyncInterfaces</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Memory</AssemblyReference>
+      <AssemblyReference>NLog</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+    </scg:List>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap:VirtualizedContainerService.HintSize="800,800" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="AppointmentsData" />
+      <Variable x:TypeArguments="x:String" Name="PatientsData" />
+      <Variable x:TypeArguments="x:String" Name="DoctorsData" />
+      <Variable x:TypeArguments="x:String" Name="Appointment" />
+      <Variable x:TypeArguments="x:String" Name="Patient" />
+      <Variable x:TypeArguments="x:String" Name="Doctor" />
+      <Variable x:TypeArguments="x:String" Name="EmailBody" />
+      <Variable x:TypeArguments="x:String" Name="EmailSubject" />
+    </Sequence.Variables>
+
+    <!-- Read data from files -->
+    <ui:ReadTextFile FileName="[Path.Combine(Environment.CurrentDirectory, &quot;app/data/appointments.json&quot;)]" DisplayName="Read Appointments Data" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="ReadTextFile_1" Text="[AppointmentsData]" />
+    <ui:ReadTextFile FileName="[Path.Combine(Environment.CurrentDirectory, &quot;app/data/patients.json&quot;)]" DisplayName="Read Patients Data" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="ReadTextFile_2" Text="[PatientsData]" />
+    <ui:ReadTextFile FileName="[Path.Combine(Environment.CurrentDirectory, &quot;app/data/doctors.json&quot;)]" DisplayName="Read Doctors Data" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="ReadTextFile_3" Text="[DoctorsData]" />
+
+    <!-- Process data and prepare notification -->
+    <ui:InvokeCode ContinueOnError="{x:Null}" Code="' Find the appointment&#xD;&#xA;Dim appointments = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of Object))(AppointmentsData)&#xD;&#xA;Appointment = appointments.FirstOrDefault(Function(a) a(&quot;id&quot;) = AppointmentId)&#xD;&#xA;&#xD;&#xA;' Find the patient&#xD;&#xA;Dim patients = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of Object))(PatientsData)&#xD;&#xA;Patient = patients.FirstOrDefault(Function(p) p(&quot;id&quot;) = Appointment(&quot;patient_id&quot;))&#xD;&#xA;&#xD;&#xA;' Find the doctor&#xD;&#xA;Dim doctors = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of Object))(DoctorsData)&#xD;&#xA;Doctor = doctors.FirstOrDefault(Function(d) d(&quot;id&quot;) = Appointment(&quot;doctor_id&quot;))&#xD;&#xA;&#xD;&#xA;' Prepare email content based on notification type&#xD;&#xA;Select Case NotificationType&#xD;&#xA;    Case &quot;confirmation&quot;&#xD;&#xA;        EmailSubject = &quot;Appointment Confirmation&quot;&#xD;&#xA;        EmailBody = &quot;Dear &quot; + Patient(&quot;name&quot;) + &quot;,&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Your appointment has been confirmed with &quot; + Doctor(&quot;name&quot;) + &quot; on &quot; +&#xD;&#xA;                    Appointment(&quot;date&quot;) + &quot; at &quot; + Appointment(&quot;time&quot;) + &quot;.&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Please arrive 15 minutes before your scheduled time.&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Best regards,&quot; + vbCrLf +&#xD;&#xA;                    &quot;Medical Staff&quot;&#xD;&#xA;    Case &quot;reminder&quot;&#xD;&#xA;        EmailSubject = &quot;Appointment Reminder&quot;&#xD;&#xA;        EmailBody = &quot;Dear &quot; + Patient(&quot;name&quot;) + &quot;,&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;This is a reminder that you have an appointment with &quot; + Doctor(&quot;name&quot;) +&#xD;&#xA;                    &quot; tomorrow at &quot; + Appointment(&quot;time&quot;) + &quot;.&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Please bring your insurance card and any relevant medical records.&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Best regards,&quot; + vbCrLf +&#xD;&#xA;                    &quot;Medical Staff&quot;&#xD;&#xA;    Case &quot;reschedule&quot;&#xD;&#xA;        EmailSubject = &quot;Appointment Rescheduled&quot;&#xD;&#xA;        EmailBody = &quot;Dear &quot; + Patient(&quot;name&quot;) + &quot;,&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Your appointment with &quot; + Doctor(&quot;name&quot;) + &quot; has been rescheduled to &quot; +&#xD;&#xA;                    Appointment(&quot;date&quot;) + &quot; at &quot; + Appointment(&quot;time&quot;) + &quot;.&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Please confirm your availability by replying to this email.&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Best regards,&quot; + vbCrLf +&#xD;&#xA;                    &quot;Medical Staff&quot;&#xD;&#xA;    Case &quot;cancellation&quot;&#xD;&#xA;        EmailSubject = &quot;Appointment Cancellation&quot;&#xD;&#xA;        EmailBody = &quot;Dear &quot; + Patient(&quot;name&quot;) + &quot;,&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Your appointment with &quot; + Doctor(&quot;name&quot;) + &quot; scheduled for &quot; +&#xD;&#xA;                    Appointment(&quot;date&quot;) + &quot; at &quot; + Appointment(&quot;time&quot;) + &quot; has been cancelled.&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Please contact our office to reschedule if needed.&quot; + vbCrLf + vbCrLf +&#xD;&#xA;                    &quot;Best regards,&quot; + vbCrLf +&#xD;&#xA;                    &quot;Medical Staff&quot;&#xD;&#xA;End Select" DisplayName="Process Data" sap:VirtualizedContainerService.HintSize="778,100" sap2010:WorkflowViewState.IdRef="InvokeCode_1" />
+
+    <!-- Simulate sending email -->
+    <ui:SendMail Bcc="{x:Null}" Cc="{x:Null}" DisplayName="Send Email Notification" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="SendMail_1" Body="[EmailBody]" Subject="[EmailSubject]" To="[&quot;patient@example.com&quot;]" />
+
+    <!-- Simulate sending SMS -->
+    <ui:InvokeCode ContinueOnError="{x:Null}" Code="' Simulate sending SMS&#xD;&#xA;Dim smsBody = EmailSubject + &quot;: &quot; + Appointment(&quot;date&quot;) + &quot; at &quot; + Appointment(&quot;time&quot;)&#xD;&#xA;System.Diagnostics.Debug.WriteLine(&quot;SMS sent to &quot; + Patient(&quot;name&quot;) + &quot;: &quot; + smsBody)" DisplayName="Send SMS" sap:VirtualizedContainerService.HintSize="778,100" sap2010:WorkflowViewState.IdRef="InvokeCode_2" />
+
+    <!-- Simulate updating notification log -->
+    <ui:InvokeCode ContinueOnError="{x:Null}" Code="' Simulate updating notification log&#xD;&#xA;Dim notificationLog = New With {&#xD;&#xA;    .appointment_id = AppointmentId,&#xD;&#xA;    .patient_id = Patient(&quot;id&quot;),&#xD;&#xA;    .notification_type = NotificationType,&#xD;&#xA;    .sent_at = DateTime.Now.ToString(&quot;o&quot;),&#xD;&#xA;    .status = &quot;sent&quot;&#xD;&#xA;}&#xD;&#xA;System.Diagnostics.Debug.WriteLine(&quot;Notification logged: &quot; + Newtonsoft.Json.JsonConvert.SerializeObject(notificationLog))" DisplayName="Update Notification Log" sap:VirtualizedContainerService.HintSize="778,100" sap2010:WorkflowViewState.IdRef="InvokeCode_3" />
+  </Sequence>
+</Activity> 

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Activity x:Class="LogAppointment" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="QueueItemId" Type="InArgument(x:String)" />
+    <x:Property Name="DoctorId" Type="InArgument(x:String)" />
+    <x:Property Name="Date" Type="InArgument(x:String)" />
+    <x:Property Name="Time" Type="InArgument(x:String)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>800,800</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>LogAppointment_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <scg:List x:TypeArguments="x:String" Capacity="28">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+    </scg:List>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="28">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>UiPath.OCR</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>Microsoft.Bcl.AsyncInterfaces</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Memory</AssemblyReference>
+      <AssemblyReference>NLog</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+    </scg:List>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap:VirtualizedContainerService.HintSize="800,800" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="QueueData" />
+      <Variable x:TypeArguments="x:String" Name="AppointmentsData" />
+      <Variable x:TypeArguments="x:String" Name="PatientsData" />
+      <Variable x:TypeArguments="x:String" Name="QueueItem" />
+      <Variable x:TypeArguments="x:String" Name="NewAppointment" />
+      <Variable x:TypeArguments="x:String" Name="NewPatient" />
+      <Variable x:TypeArguments="x:String" Name="DoctorName" />
+      <Variable x:TypeArguments="x:String" Name="PatientName" />
+    </Sequence.Variables>
+
+    <!-- Simulate opening the medical system -->
+    <ui:OpenBrowser BrowserType="Chrome" DisplayName="Open Medical System" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="OpenBrowser_1" Url="http://localhost:8000/login" />
+    <ui:TypeInto AlterIfDisabled="{x:Null}" ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" SimulateType="{x:Null}" Activate="True" DisplayName="Type into 'Username'" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="TypeInto_1" Text="admin">
+      <ui:TypeInto.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl name='username' tag='INPUT' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:TypeInto.Target>
+    </ui:TypeInto>
+    <ui:TypeInto AlterIfDisabled="{x:Null}" ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" SimulateType="{x:Null}" Activate="True" DisplayName="Type into 'Password'" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="TypeInto_2" Text="admin">
+      <ui:TypeInto.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl name='password' tag='INPUT' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:TypeInto.Target>
+    </ui:TypeInto>
+    <ui:Click AlterIfDisabled="{x:Null}" DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" SimulateClick="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Login' button" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="Click_1" KeyModifiers="None" MouseButton="BTN_LEFT">
+      <ui:Click.CursorPosition>
+        <ui:CursorPosition Position="Center">
+          <ui:CursorPosition.OffsetX>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetX>
+          <ui:CursorPosition.OffsetY>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetY>
+        </ui:CursorPosition>
+      </ui:Click.CursorPosition>
+      <ui:Click.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl tag='BUTTON' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:Click.Target>
+    </ui:Click>
+
+    <!-- Navigate to urgent cases -->
+    <ui:Click AlterIfDisabled="{x:Null}" DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" SimulateClick="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Urgent Cases' link" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="Click_2" KeyModifiers="None" MouseButton="BTN_LEFT">
+      <ui:Click.CursorPosition>
+        <ui:CursorPosition Position="Center">
+          <ui:CursorPosition.OffsetX>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetX>
+          <ui:CursorPosition.OffsetY>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetY>
+        </ui:CursorPosition>
+      </ui:Click.CursorPosition>
+      <ui:Click.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl aaname='View Urgent Cases' tag='A' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:Click.Target>
+    </ui:Click>
+
+    <!-- Read data from files -->
+    <ui:ReadTextFile FileName="[Path.Combine(Environment.CurrentDirectory, &quot;app/data/queue.json&quot;)]" DisplayName="Read Queue Data" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="ReadTextFile_1" Text="[QueueData]" />
+    <ui:ReadTextFile FileName="[Path.Combine(Environment.CurrentDirectory, &quot;app/data/appointments.json&quot;)]" DisplayName="Read Appointments Data" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="ReadTextFile_2" Text="[AppointmentsData]" />
+    <ui:ReadTextFile FileName="[Path.Combine(Environment.CurrentDirectory, &quot;app/data/patients.json&quot;)]" DisplayName="Read Patients Data" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="ReadTextFile_3" Text="[PatientsData]" />
+
+    <!-- Process data -->
+    <ui:InvokeCode ContinueOnError="{x:Null}" Code="' Find the queue item&#xD;&#xA;Dim queueItems = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of Object))(QueueData)&#xD;&#xA;QueueItem = queueItems.FirstOrDefault(Function(item) item(&quot;id&quot;) = QueueItemId)&#xD;&#xA;PatientName = QueueItem(&quot;patient_name&quot;)&#xD;&#xA;&#xD;&#xA;' Get doctor name&#xD;&#xA;Dim doctors = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of Object))(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, &quot;app/data/doctors.json&quot;)))&#xD;&#xA;Dim doctor = doctors.FirstOrDefault(Function(d) d(&quot;id&quot;).ToString() = DoctorId)&#xD;&#xA;DoctorName = doctor(&quot;name&quot;)&#xD;&#xA;&#xD;&#xA;' Create new appointment&#xD;&#xA;Dim appointments = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of Object))(AppointmentsData)&#xD;&#xA;Dim patients = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of Object))(PatientsData)&#xD;&#xA;&#xD;&#xA;Dim newAppointmentId = (appointments.Count + 1).ToString()&#xD;&#xA;Dim newPatientId = (patients.Count + 1).ToString()&#xD;&#xA;&#xD;&#xA;NewAppointment = Newtonsoft.Json.JsonConvert.SerializeObject(New With {&#xD;&#xA;    .id = newAppointmentId,&#xD;&#xA;    .patient_id = newPatientId,&#xD;&#xA;    .doctor_id = DoctorId,&#xD;&#xA;    .date = Date,&#xD;&#xA;    .time = Time,&#xD;&#xA;    .status = &quot;scheduled&quot;,&#xD;&#xA;    .symptoms = QueueItem(&quot;symptoms&quot;),&#xD;&#xA;    .created_at = DateTime.Now.ToString(&quot;o&quot;)&#xD;&#xA;})&#xD;&#xA;&#xD;&#xA;NewPatient = Newtonsoft.Json.JsonConvert.SerializeObject(New With {&#xD;&#xA;    .id = newPatientId,&#xD;&#xA;    .name = PatientName,&#xD;&#xA;    .age = QueueItem(&quot;age&quot;)&#xD;&#xA;})" DisplayName="Process Data" sap:VirtualizedContainerService.HintSize="778,100" sap2010:WorkflowViewState.IdRef="InvokeCode_1" />
+
+    <!-- Simulate clicking Approve button -->
+    <ui:Click AlterIfDisabled="{x:Null}" DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" SimulateClick="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Approve' button" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="Click_3" KeyModifiers="None" MouseButton="BTN_LEFT">
+      <ui:Click.CursorPosition>
+        <ui:CursorPosition Position="Center">
+          <ui:CursorPosition.OffsetX>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetX>
+          <ui:CursorPosition.OffsetY>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetY>
+        </ui:CursorPosition>
+      </ui:Click.CursorPosition>
+      <ui:Click.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl tag='BUTTON' aaname='Approve' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:Click.Target>
+    </ui:Click>
+
+    <!-- Simulate filling appointment form -->
+    <ui:SelectItem AlterIfDisabled="{x:Null}" DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" SimulateClick="{x:Null}" DisplayName="Select Doctor" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="SelectItem_1" Item="[DoctorName]">
+      <ui:SelectItem.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl id='doctor' tag='SELECT' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:SelectItem.Target>
+    </ui:SelectItem>
+    <ui:TypeInto AlterIfDisabled="{x:Null}" ClickBeforeTyping="{x:Null}" DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" EmptyField="{x:Null}" SendWindowMessages="{x:Null}" SimulateType="{x:Null}" Activate="True" DisplayName="Type into 'Date'" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="TypeInto_3" Text="[Date]">
+      <ui:TypeInto.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl id='date' tag='INPUT' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:TypeInto.Target>
+    </ui:TypeInto>
+    <ui:SelectItem AlterIfDisabled="{x:Null}" DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" SimulateClick="{x:Null}" DisplayName="Select Time" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="SelectItem_2" Item="[Time]">
+      <ui:SelectItem.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl id='time' tag='SELECT' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:SelectItem.Target>
+    </ui:SelectItem>
+
+    <!-- Simulate clicking Schedule button -->
+    <ui:Click AlterIfDisabled="{x:Null}" DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" SimulateClick="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Schedule' button" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="Click_4" KeyModifiers="None" MouseButton="BTN_LEFT">
+      <ui:Click.CursorPosition>
+        <ui:CursorPosition Position="Center">
+          <ui:CursorPosition.OffsetX>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetX>
+          <ui:CursorPosition.OffsetY>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetY>
+        </ui:CursorPosition>
+      </ui:Click.CursorPosition>
+      <ui:Click.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl tag='BUTTON' aaname='Schedule Appointment' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:Click.Target>
+    </ui:Click>
+
+    <!-- Update data files -->
+    <ui:WriteTextFile FileName="[Path.Combine(Environment.CurrentDirectory, &quot;app/data/appointments.json&quot;)]" DisplayName="Update Appointments" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="WriteTextFile_1" Text="[AppointmentsData.Substring(0, AppointmentsData.Length - 1) + &quot;,&quot; + NewAppointment + &quot;]&quot;]" />
+    <ui:WriteTextFile FileName="[Path.Combine(Environment.CurrentDirectory, &quot;app/data/patients.json&quot;)]" DisplayName="Update Patients" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="WriteTextFile_2" Text="[PatientsData.Substring(0, PatientsData.Length - 1) + &quot;,&quot; + NewPatient + &quot;]&quot;]" />
+    <ui:InvokeCode ContinueOnError="{x:Null}" Code="' Update queue item status&#xD;&#xA;Dim queueItems = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of Object))(QueueData)&#xD;&#xA;Dim item = queueItems.FirstOrDefault(Function(i) i(&quot;id&quot;) = QueueItemId)&#xD;&#xA;If item IsNot Nothing Then&#xD;&#xA;    item(&quot;status&quot;) = &quot;approved&quot;&#xD;&#xA;    item(&quot;process_time&quot;) = DateTime.Now.ToString(&quot;o&quot;)&#xD;&#xA;End If&#xD;&#xA;QueueData = Newtonsoft.Json.JsonConvert.SerializeObject(queueItems)" DisplayName="Update Queue Status" sap:VirtualizedContainerService.HintSize="778,100" sap2010:WorkflowViewState.IdRef="InvokeCode_2" />
+    <ui:WriteTextFile FileName="[Path.Combine(Environment.CurrentDirectory, &quot;app/data/queue.json&quot;)]" DisplayName="Save Queue Updates" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="WriteTextFile_3" Text="[QueueData]" />
+
+    <!-- Simulate sending confirmation email -->
+    <ui:SendMail Bcc="{x:Null}" Cc="{x:Null}" DisplayName="Send Confirmation Email" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="SendMail_1" Body="[&quot;Dear &quot; + PatientName + &quot;,\n\nYour appointment has been scheduled with &quot; + DoctorName + &quot; on &quot; + Date + &quot; at &quot; + Time + &quot;.\n\nThank you for choosing our medical services.\n\nBest regards,\nMedical Staff&quot;]" Subject="Appointment Confirmation" To="[&quot;patient@example.com&quot;]" />
+
+    <!-- Simulate printing appointment slip -->
+    <ui:Click AlterIfDisabled="{x:Null}" DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" SimulateClick="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Print' button" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="Click_5" KeyModifiers="None" MouseButton="BTN_LEFT">
+      <ui:Click.CursorPosition>
+        <ui:CursorPosition Position="Center">
+          <ui:CursorPosition.OffsetX>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetX>
+          <ui:CursorPosition.OffsetY>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetY>
+        </ui:CursorPosition>
+      </ui:Click.CursorPosition>
+      <ui:Click.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl tag='BUTTON' aaname='Print Appointment Slip' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:Click.Target>
+    </ui:Click>
+
+    <!-- Simulate logging out -->
+    <ui:Click AlterIfDisabled="{x:Null}" DelayBefore="{x:Null}" DelayMS="{x:Null}" SendWindowMessages="{x:Null}" SimulateClick="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Logout' button" sap:VirtualizedContainerService.HintSize="778,85" sap2010:WorkflowViewState.IdRef="Click_6" KeyModifiers="None" MouseButton="BTN_LEFT">
+      <ui:Click.CursorPosition>
+        <ui:CursorPosition Position="Center">
+          <ui:CursorPosition.OffsetX>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetX>
+          <ui:CursorPosition.OffsetY>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:CursorPosition.OffsetY>
+        </ui:CursorPosition>
+      </ui:Click.CursorPosition>
+      <ui:Click.Target>
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" InformativeScreenshot="a5c5b0c3-0c3a-4b3a-8b3a-0c3a4b3a8b3a" Selector="&lt;webctrl tag='A' aaname='Logout' /&gt;">
+          <ui:Target.TimeoutMS>
+            <InArgument x:TypeArguments="x:Int32" />
+          </ui:Target.TimeoutMS>
+          <ui:Target.WaitForReady>
+            <InArgument x:TypeArguments="ui:WaitForReady" />
+          </ui:Target.WaitForReady>
+        </ui:Target>
+      </ui:Click.Target>
+    </ui:Click>
+  </Sequence>
+</Activity>
