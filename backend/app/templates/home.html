@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Patient Triage System{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-10">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">Staff Dashboard</h1>
+        <p class="text-xl text-gray-600">Monitor and manage patient triage results and urgent appointments</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Review Urgent Cases</h2>
+            <p class="text-gray-600 mb-4">View a prioritized list of patients flagged with urgent symptoms</p>
+            <a href="/appointments/urgent" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">View Urgent Cases</a>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Appointment Overview</h2>
+            <p class="text-gray-600 mb-4">Browse all scheduled appointments with patient and doctor details</p>
+            <a href="/appointments/list" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">Open Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

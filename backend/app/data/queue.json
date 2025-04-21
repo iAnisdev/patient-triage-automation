@@ -1,0 +1,10 @@
+{
+    "id": "UC-001",
+    "patient_id": 7,
+    "symptoms": ["chest pain", "fatigue"],
+    "reason": "Flagged as urgent",
+    "submitted_at": "2025-04-21T13:05",
+    "processed_at": "",
+    "processed": false
+  }
+  
