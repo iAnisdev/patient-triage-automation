@@ -5,12 +5,61 @@
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6">Appointments List</h1>
-    
-    {% if appointments %}
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-200">
-            <thead>
-                <tr class="bg-gray-100">
+
+    <!-- Filter Controls -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+        <form id="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Patient Filter -->
+            <div>
+                <label for="patientFilter" class="block text-sm font-medium text-gray-700 mb-1">Patient</label>
+                <select id="patientFilter" name="patient" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">All Patients</option>
+                    {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Doctor Filter -->
+            <div>
+                <label for="doctorFilter" class="block text-sm font-medium text-gray-700 mb-1">Doctor</label>
+                <select id="doctorFilter" name="doctor" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">All Doctors</option>
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Symptoms Filter -->
+            <div>
+                <label for="symptomsFilter" class="block text-sm font-medium text-gray-700 mb-1">Symptoms</label>
+                <select id="symptomsFilter" name="symptoms" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">All Symptoms</option>
+                    {% for symptom in symptoms %}
+                    <option value="{{ symptom }}">{{ symptom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Date Filter -->
+            <div>
+                <label for="dateFilter" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                <input type="date" 
+                       id="dateFilter" 
+                       name="date" 
+                       class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                       min="2025-04-10"
+                       max="2025-05-15">
+            </div>
+        </form>
+    </div>
+
+    <!-- Appointments Table -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doctor</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
@@ -19,9 +68,13 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200">
                 {% for appointment in appointments %}
-                <tr>
+                <tr class="appointment-row" 
+                    data-patient="{{ appointment.patient_id }}"
+                    data-doctor="{{ appointment.doctor_id }}"
+                    data-symptoms="{{ appointment.symptoms|join(',') }}"
+                    data-date="{{ appointment.date }}">
                     <td class="px-6 py-4 whitespace-nowrap">{{ appointment.patient_name }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ appointment.doctor_name }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ appointment.date }}</td>
@@ -35,10 +88,16 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            {% if appointment.status == 'completed' %}bg-green-100 text-green-800
-                            {% elif appointment.status == 'scheduled' %}bg-blue-100 text-blue-800
-                            {% else %}bg-gray-100 text-gray-800{% endif %}">
-                            {{ appointment.status|title }}
+                            {% if appointment.status == 'completed' %}
+                                bg-green-100 text-green-800
+                            {% elif appointment.status == 'scheduled' %}
+                                bg-blue-100 text-blue-800
+                            {% elif appointment.status == 'cancelled' %}
+                                bg-red-100 text-red-800
+                            {% else %}
+                                bg-gray-100 text-gray-800
+                            {% endif %}">
+                            {{ appointment.status }}
                         </span>
                     </td>
                 </tr>
@@ -46,10 +105,40 @@
             </tbody>
         </table>
     </div>
-    {% else %}
-    <div class="text-center py-8">
-        <p class="text-gray-500">No appointments scheduled.</p>
-    </div>
-    {% endif %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const patientFilter = document.getElementById('patientFilter');
+    const doctorFilter = document.getElementById('doctorFilter');
+    const symptomsFilter = document.getElementById('symptomsFilter');
+    const dateFilter = document.getElementById('dateFilter');
+    const appointmentRows = document.querySelectorAll('.appointment-row');
+
+    function filterAppointments() {
+        const selectedPatient = patientFilter.value;
+        const selectedDoctor = doctorFilter.value;
+        const selectedSymptom = symptomsFilter.value;
+        const selectedDate = dateFilter.value;
+
+        appointmentRows.forEach(row => {
+            const patientMatch = !selectedPatient || row.dataset.patient === selectedPatient;
+            const doctorMatch = !selectedDoctor || row.dataset.doctor === selectedDoctor;
+            const symptomMatch = !selectedSymptom || row.dataset.symptoms.includes(selectedSymptom);
+            const dateMatch = !selectedDate || row.dataset.date === selectedDate;
+
+            if (patientMatch && doctorMatch && symptomMatch && dateMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    patientFilter.addEventListener('change', filterAppointments);
+    doctorFilter.addEventListener('change', filterAppointments);
+    symptomsFilter.addEventListener('change', filterAppointments);
+    dateFilter.addEventListener('change', filterAppointments);
+});
+</script>
 {% endblock %} 

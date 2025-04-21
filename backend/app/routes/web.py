@@ -10,8 +10,11 @@ from pathlib import Path
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
-# Path to queue.json
+# File paths
 QUEUE_FILE = Path("app/data/queue.json")
+APPOINTMENTS_FILE = Path("app/data/appointments.json")
+PATIENTS_FILE = Path("app/data/patients.json")
+DOCTORS_FILE = Path("app/data/doctors.json")
 
 def load_queue_data():
     if not QUEUE_FILE.exists():
@@ -115,38 +118,44 @@ async def handle_urgent_action(item_id: str, action: str):
         content={"message": f"Item {action}d successfully"}
     )
 
-@router.get("/appointments/list", response_class=HTMLResponse)
+@router.get("/appointments/list")
 async def appointments_list(request: Request):
     if not is_authenticated(request):
         return RedirectResponse(url="/login")
     
     # Load all data
-    appointments = load_json_data("app/data/appointments.json")
-    patients = load_json_data("app/data/patients.json")
-    doctors = load_json_data("app/data/doctors.json")
+    appointments = load_json_data(APPOINTMENTS_FILE)
+    patients = load_json_data(PATIENTS_FILE)
+    doctors = load_json_data(DOCTORS_FILE)
     
     # Create lookup dictionaries
-    patients_dict = {str(p["id"]): p for p in patients}  # Convert IDs to strings for matching
-    doctors_dict = {str(d["id"]): d for d in doctors}    # Convert IDs to strings for matching
+    patients_lookup = {str(p["id"]): p["name"] for p in patients}
+    doctors_lookup = {str(d["id"]): d["name"] for d in doctors}
     
-    # Combine the data
+    # Get unique symptoms from all appointments
+    all_symptoms = set()
+    for appointment in appointments:
+        all_symptoms.update(appointment["symptoms"])
+    unique_symptoms = sorted(list(all_symptoms))
+    
+    # Combine appointment data with patient and doctor names
     combined_appointments = []
     for appointment in appointments:
-        patient = patients_dict.get(appointment["patient_id"])
-        doctor = doctors_dict.get(appointment["doctor_id"])
-        
-        if patient and doctor:
-            combined_appointments.append({
-                "id": appointment["id"],
-                "patient_name": patient["name"],
-                "doctor_name": doctor["name"],
-                "date": appointment["date"],
-                "time": appointment["time"],
-                "status": appointment["status"],
-                "symptoms": appointment["symptoms"]
-            })
+        combined = appointment.copy()
+        combined["patient_name"] = patients_lookup.get(str(appointment["patient_id"]), "Unknown")
+        combined["doctor_name"] = doctors_lookup.get(str(appointment["doctor_id"]), "Unknown")
+        combined_appointments.append(combined)
+    
+    # Sort appointments by date and time
+    combined_appointments.sort(key=lambda x: (x["date"], x["time"]))
     
     return templates.TemplateResponse(
-        "appointments.html", 
-        {"request": request, "appointments": combined_appointments}
+        "appointments.html",
+        {
+            "request": request,
+            "appointments": combined_appointments,
+            "patients": patients,
+            "doctors": doctors,
+            "symptoms": unique_symptoms
+        }
     ) 
