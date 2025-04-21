@@ -12,11 +12,16 @@
 
         <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form action="/booking" method="POST" enctype="application/x-www-form-urlencoded" class="space-y-6">
+                {% if prefilled_data %}
+                <input type="hidden" name="is_rejected" value="true">
+                {% endif %}
+                
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
                     <div class="mt-1">
                         <input id="name" name="name" type="text" required
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            value="{{ prefilled_data.name if prefilled_data else '' }}">
                     </div>
                 </div>
 
@@ -24,7 +29,8 @@
                     <label for="age" class="block text-sm font-medium text-gray-700">Age</label>
                     <div class="mt-1">
                         <input id="age" name="age" type="number" min="0" max="120" required
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            value="{{ prefilled_data.age if prefilled_data else '' }}">
                     </div>
                 </div>
 
@@ -34,7 +40,7 @@
                     <div class="mt-1">
                         <textarea id="symptoms" name="symptoms" rows="4" required
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="headache, fever, cough"></textarea>
+                            placeholder="headache, fever, cough">{{ prefilled_data.symptoms if prefilled_data else '' }}</textarea>
                     </div>
                 </div>
 

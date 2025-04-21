@@ -1,14 +1,62 @@
 [
   {
-    "id": "1",
-    "name": "Dr. Sarah Johnson",
-    "specialization": "Cardiology",
-    "email": "sarah.johnson@hospital.com"
+    "id": 1,
+    "name": "Dr. Smith",
+    "specialty": "Cardiology",
+    "available_slots": ["2025-04-21T20:53", "2025-04-21T15:53", "2025-04-21T19:53"]
   },
   {
-    "id": "2",
-    "name": "Dr. Michael Chen",
-    "specialization": "Neurology",
-    "email": "michael.chen@hospital.com"
+    "id": 2,
+    "name": "Dr. Johnson",
+    "specialty": "General",
+    "available_slots": ["2025-04-21T22:53", "2025-04-21T16:53", "2025-04-21T19:53"]
+  },
+  {
+    "id": 3,
+    "name": "Dr. Patel",
+    "specialty": "Neurology",
+    "available_slots": ["2025-04-21T15:53", "2025-04-21T18:53", "2025-04-21T20:53"]
+  },
+  {
+    "id": 4,
+    "name": "Dr. Lee",
+    "specialty": "Cardiology",
+    "available_slots": ["2025-04-21T19:53", "2025-04-21T20:53", "2025-04-21T16:53"]
+  },
+  {
+    "id": 5,
+    "name": "Dr. Brown",
+    "specialty": "Neurology",
+    "available_slots": ["2025-04-21T22:53", "2025-04-21T17:53", "2025-04-21T14:53"]
+  },
+  {
+    "id": 6,
+    "name": "Dr. Davis",
+    "specialty": "General",
+    "available_slots": ["2025-04-21T21:53", "2025-04-21T17:53", "2025-04-21T15:53"]
+  },
+  {
+    "id": 7,
+    "name": "Dr. Wilson",
+    "specialty": "Pediatrics",
+    "available_slots": ["2025-04-21T17:53", "2025-04-21T20:53", "2025-04-21T21:53"]
+  },
+  {
+    "id": 8,
+    "name": "Dr. Garcia",
+    "specialty": "Emergency",
+    "available_slots": ["2025-04-21T15:53", "2025-04-21T18:53", "2025-04-21T20:53"]
+  },
+  {
+    "id": 9,
+    "name": "Dr. Clark",
+    "specialty": "Cardiology",
+    "available_slots": ["2025-04-21T22:53", "2025-04-21T19:53", "2025-04-21T21:53"]
+  },
+  {
+    "id": 10,
+    "name": "Dr. Lewis",
+    "specialty": "Pediatrics",
+    "available_slots": ["2025-04-21T15:53", "2025-04-21T20:53", "2025-04-21T22:53"]
   }
-] 
+]
