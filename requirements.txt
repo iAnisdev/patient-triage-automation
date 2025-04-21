@@ -1,6 +1,6 @@
 aiobotocore==2.15.2
 aiofiles==24.1.0
-aiohttp @ file:///private/var/folders/c_/qfmhj66j0tn016nkx_th4hxm0000gp/T/abs_87_f9ghg_u/croot/aiohttp_1715110796952/work
+aiohttp==3.8.4
 aioitertools @ file:///tmp/build/80754af9/aioitertools_1607109665762/work
 aiosignal @ file:///tmp/build/80754af9/aiosignal_1637843061372/work
 alabaster @ file:///private/var/folders/c_/qfmhj66j0tn016nkx_th4hxm0000gp/T/abs_fadeblw4_u/croot/alabaster_1718201487017/work
