@@ -1,17 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Urgent Cases - Medical Triage System{% endblock %}
+{% block title %}Urgent Cases{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">Urgent Cases</h1>
+    <h1 class="text-2xl font-bold mb-6">Urgent Cases</h1>
     
-    {% if queue_items %}
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-200">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient Name</th>
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symptoms</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
@@ -19,7 +18,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200">
                 {% for item in queue_items %}
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap">{{ item.patient_name }}</td>
@@ -31,39 +30,21 @@
                             {% endfor %}
                         </ul>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ item.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ item.timestamp }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        {% if item.status == 'pending' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                Pending
-                            </span>
-                        {% else %}
-                            <div>
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {% if item.status == 'approved' %}bg-green-100 text-green-800
-                                    {% else %}bg-red-100 text-red-800{% endif %}">
-                                    {{ item.status|title }}
-                                </span>
-                                {% if item.process_time %}
-                                <div class="text-xs text-gray-500 mt-1">
-                                    Processed: {{ item.process_time.strftime('%Y-%m-%d %H:%M') }}
-                                </div>
-                                {% endif %}
-                            </div>
-                        {% endif %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            {% if item.status == 'pending' %}bg-yellow-100 text-yellow-800
+                            {% elif item.status == 'approved' %}bg-green-100 text-green-800
+                            {% else %}bg-red-100 text-red-800{% endif %}">
+                            {{ item.status }}
+                        </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         {% if item.status == 'pending' %}
-                            <button onclick="handleAction('{{ item.id }}', 'approve')" 
-                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded mr-2">
-                                Approve
-                            </button>
-                            <button onclick="handleAction('{{ item.id }}', 'reject')" 
-                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-                                Reject
-                            </button>
-                        {% else %}
-                            <span class="text-gray-500">-</span>
+                        <button onclick="openAppointmentModal('{{ item.id }}')" 
+                            class="text-indigo-600 hover:text-indigo-900 mr-3">Approve</button>
+                        <a href="/appointments/urgent/{{ item.id }}/reject" 
+                            class="text-red-600 hover:text-red-900">Reject</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -71,34 +52,172 @@
             </tbody>
         </table>
     </div>
-    {% else %}
-    <div class="text-center py-8">
-        <p class="text-gray-500">No urgent cases at the moment.</p>
+</div>
+
+<!-- Appointment Modal -->
+<div id="appointmentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Schedule Appointment</h3>
+            <button onclick="closeAppointmentModal()" class="text-gray-400 hover:text-gray-500">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <form id="appointmentForm" class="space-y-4">
+            <input type="hidden" id="queueItemId" name="queue_item_id">
+            
+            <div>
+                <label for="doctor" class="block text-sm font-medium text-gray-700">Select Doctor</label>
+                <select id="doctor" name="doctor_id" required
+                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <option value="">Choose a doctor</option>
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="date" class="block text-sm font-medium text-gray-700">Appointment Date</label>
+                <input type="date" id="date" name="date" required
+                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <p class="mt-1 text-sm text-gray-500">Select a date starting from today</p>
+            </div>
+
+            <div>
+                <label for="time" class="block text-sm font-medium text-gray-700">Appointment Time</label>
+                <select id="time" name="time" required
+                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <option value="">Select a time slot</option>
+                </select>
+                <p class="mt-1 text-sm text-gray-500">Available time slots will update based on selected date</p>
+            </div>
+
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeAppointmentModal()"
+                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    Cancel
+                </button>
+                <button type="submit"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    Schedule Appointment
+                </button>
+            </div>
+        </form>
     </div>
-    {% endif %}
 </div>
 
 <script>
-async function handleAction(itemId, action) {
+const TIME_SLOTS = [
+    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+    '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
+    '15:00', '15:30', '16:00', '16:30'
+];
+
+function formatTime(hours, minutes) {
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+}
+
+function openAppointmentModal(queueItemId) {
+    document.getElementById('queueItemId').value = queueItemId;
+    document.getElementById('appointmentModal').classList.remove('hidden');
+    
+    // Set default date to today
+    const today = new Date();
+    const dateInput = document.getElementById('date');
+    dateInput.value = today.toISOString().split('T')[0];
+    dateInput.min = today.toISOString().split('T')[0];
+    
+    // Initialize time slots
+    updateTimeSlots();
+}
+
+function closeAppointmentModal() {
+    document.getElementById('appointmentModal').classList.add('hidden');
+}
+
+function updateTimeSlots() {
+    const dateInput = document.getElementById('date');
+    const timeSelect = document.getElementById('time');
+    const now = new Date();
+    const selectedDate = new Date(dateInput.value);
+    const isToday = selectedDate.toDateString() === now.toDateString();
+    
+    // Clear existing options except the first one
+    while (timeSelect.options.length > 1) {
+        timeSelect.remove(1);
+    }
+    
+    // Add time slots
+    TIME_SLOTS.forEach(slot => {
+        const [hour, minute] = slot.split(':').map(Number);
+        const slotTime = new Date();
+        slotTime.setHours(hour, minute, 0, 0);
+        
+        if (!isToday || slotTime > now) {
+            const option = document.createElement('option');
+            option.value = slot;
+            option.textContent = slot;
+            timeSelect.appendChild(option);
+        }
+    });
+    
+    // Select first available time slot
+    if (timeSelect.options.length > 1) {
+        timeSelect.selectedIndex = 1;
+    } else {
+        // If no slots available for today, show message
+        const noSlotsOption = document.createElement('option');
+        noSlotsOption.value = '';
+        noSlotsOption.textContent = 'No slots available for today';
+        noSlotsOption.disabled = true;
+        timeSelect.appendChild(noSlotsOption);
+    }
+}
+
+// Close modal when clicking outside
+document.getElementById('appointmentModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('appointmentModal')) {
+        closeAppointmentModal();
+    }
+});
+
+// Initialize date and time when modal opens
+document.getElementById('date').addEventListener('change', updateTimeSlots);
+
+document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = {
+        queue_item_id: formData.get('queue_item_id'),
+        doctor_id: formData.get('doctor_id'),
+        date: formData.get('date'),
+        time: formData.get('time')
+    };
+    
     try {
-        const response = await fetch(`/appointments/urgent/${itemId}/${action}`, {
+        const response = await fetch('/appointments/urgent/approve', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
         });
         
         if (response.ok) {
-            // Reload the page to show updated status
+            closeAppointmentModal();
             window.location.reload();
         } else {
-            const data = await response.json();
-            alert(data.message || 'An error occurred');
+            alert('Error scheduling appointment');
         }
     } catch (error) {
-        alert('An error occurred while processing the action');
         console.error('Error:', error);
+        alert('Error scheduling appointment');
     }
-}
+});
 </script>
 {% endblock %} 

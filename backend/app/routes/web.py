@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException, Depends, Form
+from fastapi import APIRouter, Request, HTTPException, Depends, Form, Body
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from app.utils.auth import create_session_token, is_authenticated, get_current_user
@@ -6,8 +6,9 @@ from app.models.queue import QueueItem
 import json
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 import random
+from pydantic import BaseModel
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -84,12 +85,20 @@ async def logout():
     response.delete_cookie("session")
     return response
 
+class AppointmentSchedule(BaseModel):
+    queue_item_id: str
+    doctor_id: str
+    date: str
+    time: str
+
 @router.get("/appointments/urgent", response_class=HTMLResponse)
 async def urgent_cases(request: Request):
     if not is_authenticated(request):
         return RedirectResponse(url="/login")
     
     queue_data = load_queue_data()
+    doctors = load_json_data(DOCTORS_FILE)
+    
     # Convert string timestamps to datetime objects
     for item in queue_data:
         item["timestamp"] = datetime.fromisoformat(item["timestamp"])
@@ -97,55 +106,65 @@ async def urgent_cases(request: Request):
             item["process_time"] = datetime.fromisoformat(item["process_time"])
     
     return templates.TemplateResponse(
-        "urgent.html", 
-        {"request": request, "queue_items": queue_data}
+        "urgent.html",
+        {
+            "request": request,
+            "queue_items": queue_data,
+            "doctors": doctors,
+            "time_slots": TIME_SLOTS
+        }
     )
 
-@router.post("/appointments/urgent/{item_id}/{action}")
-async def handle_urgent_action(item_id: str, action: str, request: Request):
-    if action not in ["approve", "reject"]:
-        return JSONResponse(
-            status_code=400,
-            content={"message": "Invalid action"}
-        )
-    
+@router.post("/appointments/urgent/approve")
+async def approve_urgent_case(schedule: AppointmentSchedule = Body(...)):
+    # Load queue data
     queue_data = load_queue_data()
-    item = next((item for item in queue_data if item["id"] == item_id), None)
+    queue_item = next((item for item in queue_data if item["id"] == schedule.queue_item_id), None)
     
-    if not item:
+    if not queue_item:
         return JSONResponse(
             status_code=404,
-            content={"message": "Item not found"}
+            content={"message": "Queue item not found"}
         )
     
-    if action == "approve":
-        # Update item status and add process time
-        item["status"] = "approved"
-        item["process_time"] = datetime.now().isoformat()
-        save_queue_data(queue_data)
-        
-        return JSONResponse(
-            status_code=200,
-            content={"message": "Item approved successfully"}
-        )
-    else:  # reject
-        # Remove from queue
-        queue_data = [item for item in queue_data if item["id"] != item_id]
-        save_queue_data(queue_data)
-        
-        # Redirect to booking form with pre-filled data
-        return templates.TemplateResponse(
-            "booking.html",
-            {
-                "request": request,
-                "hide_topbar": True,
-                "prefilled_data": {
-                    "name": item["patient_name"],
-                    "age": item["age"],
-                    "symptoms": ", ".join(item["symptoms"])
-                }
-            }
-        )
+    # Update queue item
+    queue_item["status"] = "approved"
+    queue_item["process_time"] = datetime.now().isoformat()
+    save_queue_data(queue_data)
+    
+    # Create appointment
+    appointment_data = {
+        "id": str(len(load_json_data(APPOINTMENTS_FILE)) + 1),
+        "patient_id": str(len(load_json_data(PATIENTS_FILE)) + 1),
+        "doctor_id": schedule.doctor_id,
+        "date": schedule.date,
+        "time": schedule.time,
+        "status": "scheduled",
+        "symptoms": queue_item["symptoms"],
+        "created_at": datetime.now().isoformat()
+    }
+    
+    # Save appointment
+    appointments = load_json_data(APPOINTMENTS_FILE)
+    appointments.append(appointment_data)
+    save_json_data(APPOINTMENTS_FILE, appointments)
+    
+    # Create patient record
+    patient_data = {
+        "id": appointment_data["patient_id"],
+        "name": queue_item["patient_name"],
+        "age": queue_item["age"]
+    }
+    
+    # Save patient
+    patients = load_json_data(PATIENTS_FILE)
+    patients.append(patient_data)
+    save_json_data(PATIENTS_FILE, patients)
+    
+    return JSONResponse(
+        status_code=200,
+        content={"message": "Appointment scheduled successfully"}
+    )
 
 @router.get("/appointments/list")
 async def appointments_list(request: Request):
