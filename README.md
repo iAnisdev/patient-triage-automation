@@ -20,7 +20,6 @@ This project was developed as part of the Master of Science in Artificial Intell
 ## 📁 Folder Structure
 
 ```
-/frontend    → Google ADK chatbot setup (intents, flows)
 /backend     → Python FastAPI service for triage logic
 /bots        → UiPath automation scripts for hospital system actions
 ```
