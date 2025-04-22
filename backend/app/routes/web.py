@@ -6,12 +6,18 @@ from app.models.queue import QueueItem
 import json
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional
 import random
 from pydantic import BaseModel
+import os
 
 router = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
+
+# This gets the absolute path to backend/app/
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+
+templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 # File paths
 QUEUE_FILE = Path("app/data/queue.json")
