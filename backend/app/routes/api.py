@@ -6,10 +6,14 @@ from datetime import datetime
 router = APIRouter()
 
 # File paths
-QUEUE_FILE = Path("app/data/queue.json")
-APPOINTMENTS_FILE = Path("app/data/appointments.json")
-DOCTORS_FILE = Path("app/data/doctors.json")
-PATIENTS_FILE = Path("app/data/patients.json")
+BASE_DIR = Path(__file__).resolve().parent.parent  # backend/app → backend
+DATA_DIR = BASE_DIR / "data"
+
+QUEUE_FILE = DATA_DIR / "queue.json"
+APPOINTMENTS_FILE = DATA_DIR / "appointments.json"
+DOCTORS_FILE = DATA_DIR / "doctors.json"
+PATIENTS_FILE = DATA_DIR / "patients.json"
+
 
 def load_json_data(file_path: Path):
     if not file_path.exists():
