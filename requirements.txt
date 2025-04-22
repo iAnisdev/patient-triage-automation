@@ -5,3 +5,4 @@ aiofiles==23.2.1
 python-multipart==0.0.9
 peewee==3.17.8
 python-dotenv==1.0.1
+itsdangerous==2.1.2
