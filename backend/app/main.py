@@ -20,7 +20,10 @@ app.add_middleware(
 )
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+current_dir = os.path.dirname(__file__)
+static_dir = os.path.join(current_dir, "static")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
 
 # Include routers
 app.include_router(api.router, prefix="/api")
