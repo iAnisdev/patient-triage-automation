@@ -37,7 +37,6 @@ This project was developed as part of the Master of Science in Artificial Intell
 
 1. **Install Dependencies**
 ```bash
-cd backend
 # Create and activate virtual environment
 python -m venv venv
 source venv/bin/activate
