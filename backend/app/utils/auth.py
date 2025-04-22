@@ -2,7 +2,7 @@ from fastapi import Request, HTTPException
 from itsdangerous import URLSafeTimedSerializer
 from typing import Optional
 
-SECRET_KEY = "your-secret-key-here"  # In production, use a secure secret key
+SECRET_KEY = "c909df8848b644a4be2c811f237e72b8"
 serializer = URLSafeTimedSerializer(SECRET_KEY)
 
 def create_session_token(username: str) -> str:

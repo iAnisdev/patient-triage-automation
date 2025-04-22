@@ -8,7 +8,7 @@ import os
 app = FastAPI()
 
 # Add session middleware with a secret key
-app.add_middleware(SessionMiddleware, secret_key="your-secret-key-here")
+app.add_middleware(SessionMiddleware, secret_key="c909df8848b644a4be2c811f237e72b8")
 
 # Add CORS middleware
 app.add_middleware(
